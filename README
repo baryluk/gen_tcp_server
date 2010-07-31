@@ -1,0 +1,11 @@
+gen_tcp_server is a behaviour for writing TCP servers.
+
+It supports:
+ - OTP supervisor structure, code upgrades and debuging
+ - listening on multiple ports
+ - {packet, X}
+ - flow control
+ - timeouts
+ - latency profiler
+ - limiting number of connections
+ - dynamic reconfiguration

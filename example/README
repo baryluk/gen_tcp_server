@@ -1,0 +1,18 @@
+Compile and start using
+
+application:start(sasl).
+application:start(example).
+
+then connect using
+
+$ telnet localhst 9990
+
+Everything you will write, will be returned back
+
+Special commends to test:
+   bye - closes connection
+   time - will return current server time
+   status - not implemented function, witch will crash server for testing.
+
+
+By default latency profiler is enabled.
