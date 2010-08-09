@@ -271,10 +271,7 @@ client_loop_handle(State=#gen_tcp_server_connection_state{clientstate=ClientStat
 	Debug2 = dbg(Debug, client_loop_handle, [HandleMsg]),
 
 	case HandleMsg of
-		{channel, _, _, _, _, _, _} = Msg when Debug == [] ->
-			client_msg(State, Debug2, Msg);
-
-		{tcp, ClientSocket, Data} when Debug == [] ->
+		{tcp, ClientSocket, Data} when Debug =:= [] ->
 			client_data(State, Debug2, Data);
 
 		{tcp, ClientSocket, Data} ->
@@ -290,9 +287,9 @@ client_loop_handle(State=#gen_tcp_server_connection_state{clientstate=ClientStat
 			Debug3 = dbg(Debug2, tcp_close),
 			client_close(State, Debug3, {error, tcp_close});
 
-		{tcp_error, ClientSocket} ->
-			Debug3 = dbg(Debug2, close),
-			client_close(State, Debug3, {error, connection_lost});
+		{tcp_error, ClientSocket, Reason} ->
+			Debug3 = dbg(Debug2, tcp_error),
+			client_close(State, Debug3, {error, {tcp_error, Reason}});
 
 		{gen_tcp_server, From, msg, Msg} ->
 			Debug3 = dbg(Debug2, server_msg, [From, Msg]),
@@ -332,6 +329,9 @@ client_loop_handle(State=#gen_tcp_server_connection_state{clientstate=ClientStat
 		{mpprof_msg_v1, OrgMsg, _, _, _} = MPMsg ->
 			Debug3 = dbg(Debug2, mpprof_msg, [MPMsg]),
 			client_loop_handle(State, Debug3, OrgMsg);
+
+		Msg when Debug2 =:= [] ->
+			client_msg(State, Debug2, Msg)
 
 		Msg ->
 			Debug3 = dbg(Debug2, msg, [Msg]),
